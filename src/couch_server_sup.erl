@@ -98,13 +98,7 @@ start_server(IniFiles) ->
 
     % launch the icu bridge
     % just restart if one of the config settings change.
-
-    couch_config:register(
-        fun("couchdb", "util_driver_dir") ->
-            ?MODULE:stop();
-        ("daemons", _) ->
-            ?MODULE:stop()
-        end, Pid),
+    couch_config:register(fun ?MODULE:config_change/2, Pid),
 
     unlink(ConfigPid),
 
@@ -132,6 +126,12 @@ start_server(IniFiles) ->
 
 stop() ->
     catch exit(whereis(couch_server_sup), normal).
+
+config_change("daemons", _) ->
+    supervisor:terminate_child(couch_server_sup, couch_secondary_services),
+    supervisor:restart_child(couch_server_sup, couch_secondary_services);
+config_change("couchdb", "util_driver_dir") ->
+    init:restart().
 
 init(ChildSpecs) ->
     {ok, ChildSpecs}.
