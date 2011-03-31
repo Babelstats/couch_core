@@ -104,6 +104,7 @@ readjson(OsProc) when is_record(OsProc, os_proc) ->
 
 % gen_server API
 init([Command, Options, PortOptions]) ->
+    process_flag(trap_exit, true),
     Spawnkiller = filename:join([code:priv_dir(couch), "couchspawnkillable.sh"]), 
     BaseProc = #os_proc{
         command=Command,
