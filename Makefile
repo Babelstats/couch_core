@@ -27,6 +27,7 @@ clean:
 
 distclean: clean
 	@./rebar delete-deps
+	@rm -rf deps
 
 %.beam: %.erl
 	@erlc -o test/etap/ $<
