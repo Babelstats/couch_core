@@ -1,5 +1,5 @@
 {application, couch, [
-    {description, "Apache CouchDB core"},
+    {description, "Refuge CouchDB core"},
     {vsn, "1.2p0"},
     {registered, [
         couch_config,
