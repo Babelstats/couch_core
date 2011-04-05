@@ -1,6 +1,6 @@
 {application, couch, [
     {description, "Refuge CouchDB core"},
-    {vsn, "1.2p0"},
+    {vsn, "1.2-077e9529p0"},
     {registered, [
         couch_config,
         couch_db_update,
