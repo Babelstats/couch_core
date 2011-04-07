@@ -24,4 +24,3 @@ deps
 @abs_top_builddir@/
 apps/couch/test/temp*
 
-.DSstore
