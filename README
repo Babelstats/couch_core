@@ -1,6 +1,6 @@
 CouchDB Core
 ============
 
-Bassed on Apache CouchDB (http://couchdb.apache.org) with cusr-tom
+Based on Apache CouchDB (http://couchdb.apache.org) with custom
 patches.
 
