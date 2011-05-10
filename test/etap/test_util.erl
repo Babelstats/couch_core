@@ -16,15 +16,15 @@
 -export([source_file/1, build_file/1, config_files/0]).
 
 srcdir() ->
-    "@abs_top_srcdir@".
+    "../../src".
 
 builddir() ->
-    "@abs_top_builddir@".
+    "../..".
 
 init_code_path() ->
-    Paths = ["etap", "couchdb", "erlang-oauth", "ibrowse", "mochiweb"],
+    Paths = ["couch", "erlang-oauth", "ibrowse", "mochiweb"],
     lists:foreach(fun(Name) ->
-        code:add_patha(filename:join([builddir(), "src", Name]))
+        code:add_patha(filename:join([builddir(), "deps", Name]))
     end, Paths).
 
 source_file(Name) ->
