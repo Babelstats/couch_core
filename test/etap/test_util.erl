@@ -24,7 +24,7 @@ builddir() ->
 init_code_path() ->
     Paths = ["couch", "erlang-oauth", "ibrowse", "mochiweb"],
     lists:foreach(fun(Name) ->
-        code:add_patha(filename:join([builddir(), "deps", Name]))
+        code:add_patha(filename:join([builddir(), "deps", "ebin", Name]))
     end, Paths).
 
 source_file(Name) ->
