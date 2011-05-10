@@ -16,7 +16,7 @@
 
 version() ->
     {ok, FullVersion} = application:get_key(couch, vsn),
-    hd(string:tokens(FullVersion, "p")).
+    hd(string:tokens(FullVersion, "-")).
 
 start() ->
     application:start(couch).
