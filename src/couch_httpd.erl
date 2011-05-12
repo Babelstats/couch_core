@@ -40,11 +40,16 @@ start_link(https) ->
     KeyFile = couch_config:get("ssl", "key_file", nil),
     Options = case CertFile /= nil andalso KeyFile /= nil of
                   true ->
+                      {ok, SslOpts} = couch_util:parse_term(
+                         couch_config:get("ssl", "ssl_options", "[]")),
+
+                      SslOpts1 = [
+                          {certfile, CertFile},
+                          {keyfile, KeyFile}] ++ SslOpts,
+                                                        
                       [{port, Port},
                        {ssl, true},
-                       {ssl_opts, [
-                             {certfile, CertFile},
-                             {keyfile, KeyFile}]}];
+                       {ssl_opts, SslOpts1}];
                   false ->
                       io:format("SSL enabled but PEM certificates are missing.", []),
                       throw({error, missing_certs})
