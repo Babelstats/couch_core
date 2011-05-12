@@ -27,7 +27,7 @@ stop(_) ->
     ok.
 
 get_ini_files() ->
-    Etc = filename:join(code:root_dir(), "etc"),
+    Etc = filename:join([code:root_dir(), "etc", "rcouch"]),
     Default = [filename:join(Etc,"default.ini"), filename:join(Etc,"local.ini")],
     case init:get_argument(couch_ini) of
     error ->
