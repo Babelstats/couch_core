@@ -137,6 +137,7 @@ start_link(Name, Options) ->
 
     {ok, Pid}.
 
+
 % SpecStr is a string like "{my_module, my_fun}"
 %  or "{my_module, my_fun, <<"my_arg">>}"
 make_arity_1_fun(SpecStr) ->
