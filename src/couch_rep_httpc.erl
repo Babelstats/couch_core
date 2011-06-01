@@ -290,13 +290,22 @@ ssl_options(#http_db{url = Url}) ->
         Depth = list_to_integer(
             couch_config:get("replicator", "ssl_certificate_max_depth", "3")
         ),
-        SslOpts = [{depth, Depth} |
-        case couch_config:get("replicator", "verify_ssl_certificates") of
-        "true" ->
-            ssl_verify_options(true);
-        _ ->
-            ssl_verify_options(false)
-        end],
+        VerifyCerts = couch_config:get("replicator", "verify_ssl_certificates"),
+        CertFile = couch_config:get("replicator", "cert_file", nil),
+        KeyFile = couch_config:get("replicator", "key_file", nil),
+        Password = couch_config:get("replicator", "password", nil),
+        SslOpts = [{depth, Depth} | ssl_verify_options(VerifyCerts =:= "true")],
+        SslOpts1 = case CertFile /= nil andalso KeyFile /= nil of
+            true ->
+                case Password of
+                    nil -> 
+                        [{certfile, CertFile}, {keyfile, KeyFile}] ++ SslOpts;
+                    _ -> 
+                        [{certfile, CertFile}, {keyfile, KeyFile},
+                            {password, Password}] ++ SslOpts
+                end;
+            false -> SslOpts
+        end,
         [{is_ssl, true}, {ssl_options, SslOpts}];
     #url{protocol = http} ->
         []
