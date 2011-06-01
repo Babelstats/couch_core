@@ -106,7 +106,7 @@ readjson(OsProc) when is_record(OsProc, os_proc) ->
 init([Command, Options, PortOptions]) ->
     process_flag(trap_exit, true),
     PrivDir = couch_util:priv_dir(),
-    Spawnkiller = filename:join(PrivDir, "couchspawnkillable"),
+    Spawnkiller = filename:join(PrivDir, "spawnkillable"),
     BaseProc = #os_proc{
         command=Command,
         port=open_port({spawn, Spawnkiller ++ " " ++ Command}, PortOptions),

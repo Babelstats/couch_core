@@ -194,7 +194,7 @@ code_change(_OldVsn, State, _Extra) ->
 
 start_port(Command) ->
     PrivDir = couch_util:priv_dir(),
-    Spawnkiller = filename:join(PrivDir, "couchspawnkillable"),
+    Spawnkiller = filename:join(PrivDir, "spawnkillable"),
     Port = open_port({spawn, Spawnkiller ++ " " ++ Command}, ?PORT_OPTIONS),
     {ok, Port}.
 
