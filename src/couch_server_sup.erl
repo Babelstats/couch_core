@@ -67,9 +67,7 @@ start_server(IniFiles) ->
     _ -> ok
     end,
 
-    BaseChildSpecs =
-    {{one_for_all, 10, 3600},
-        [{couch_config,
+    BaseSupervisors = [{couch_config,
             {couch_server_sup, couch_config_start_link_wrapper, [IniFiles, ConfigPid]},
             permanent,
             brutal_kill,
@@ -87,7 +85,23 @@ start_server(IniFiles) ->
             infinity,
             supervisor,
             [couch_secondary_sup]}
-        ]},
+        ],
+
+    % extra supervisors added to main supervision tree via conf
+    Children = BaseSupervisors ++ [
+        begin
+            {ok, {Module, Fun, Args}} = couch_util:parse_term(SpecStr),
+            {list_to_atom(Name),
+                {Module, Fun, Args},
+                permanent,
+                infinity,
+                supervisor,
+                [Module]}
+        end
+        || {Name, SpecStr}
+        <- couch_config:get("supervisors"), SpecStr /= ""],
+    
+    BaseChildSpecs = {{one_for_all, 10, 3600}, Children},
 
     % ensure these applications are running
     application:start(ibrowse),
