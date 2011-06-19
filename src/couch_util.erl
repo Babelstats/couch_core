@@ -35,11 +35,11 @@
 
 priv_dir() ->
     case code:priv_dir(couch) of
-        {error, bad_name} ->
-            % small hack, in dev mode "app" is couchdb. Fixing requires
-            % renaming src/couch to src/couch. Not really worth the hassle.
-            % -Damien
-            code:priv_dir(couchdb);
+        {error, _} ->
+            %% try to get relative priv dir. useful for tests.
+            EbinDir = filename:dirname(code:which(?MODULE)),
+            AppPath = filename:dirname(EbinDir),
+            filename:join(AppPath, "priv");
         Dir -> Dir
     end.
 
