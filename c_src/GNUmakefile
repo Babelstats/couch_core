@@ -6,6 +6,7 @@ MAKE_ENV = -j 3
 
 TAR = tar
 GUNZIP = gunzip
+UNZIP_BIN = unzip
 CC = gcc
 CXX = g++
 
@@ -14,7 +15,8 @@ LIB_DIR := $(SYSTEM_DIR)/lib
 
 ICU_DIR := $(CURDIR)/icu
 
-ICU_VER=4_6_1
+ICU_VER=4_8
+ICUDATA=icudt48l
 
 CONFIGURE_ENV = --disable-debug \
 		--disable-shared \
@@ -29,7 +31,9 @@ CONFIGURE_ENV = --disable-debug \
 all: $(LIB_DIR)/libicuuc.a
 
 $(LIB_DIR)/libicuuc.a:
-	$(GUNZIP) -c icu4c-$(ICU_VER)-src.tgz | $(TAR) xf -
+	${GUNZIP} -c icu4c-${ICU_VER}-src.tgz | ${TAR} xf -
+	$(UNZIP_BIN) $(CURDIR)/$(ICUDATA).zip
+	cp $(CURDIR)/$(ICUDATA).dat $(ICU_DIR)/source/data/in/
 	for P in $(CURDIR)/patches/*.patch; do \
 	 	(patch -p0 -i $${P} || echo "skipping patch"); \
 	done
@@ -41,5 +45,6 @@ $(LIB_DIR)/libicuuc.a:
 
 clean:
 	@rm -rf $(SYSTEM_DIR) $(ICU_DIR)
+	@rm -f $(CURDIR)/$(ICUDATA).dat
 
 .EXPORT_ALL_VARIABLES:
