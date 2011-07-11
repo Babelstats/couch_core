@@ -102,9 +102,9 @@ build_nspr()
         Linux)
             ARCH=`arch 2>/dev/null`
             if [ "$ARCH" = "x86_64" ]; then
-                NSPR_CONFIGURE_ENV+="--enable-64bit"
+                NSPR_CONFIGURE_ENV="--enable-64bit"
             fi
-            CFLAGS+="-lpthread"
+            CFLAGS="$CFLAGS -lpthread"
             ;;
         FreeBSD|OpenBSD|NetBSD)
             ARCH=`(uname -p) 2>/dev/null`

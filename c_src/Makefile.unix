@@ -73,7 +73,6 @@ nifs: couch_ejson_compare
 couch_ejson_compare: priv/couch_ejson_compare.so
 
 priv/couch_ejson_compare.so: $(COUCH_EJSON_COMPARE_FILES)
-	@$(CC) $(DRV_CFLAGS) -D_BSD_SOURCE \
-		$(ICU_LIBS) \
+	@$(CC) $(ICU_CFLAGS) $(ICU_LIBS) \
 		c_src/couch_ejson_compare/couch_ejson_compare.c \
 		-o priv/couch_ejson_compare.so
