@@ -19,6 +19,7 @@ c_src/obj/*.so
 priv/*.so
 priv/couchspawnkillable
 libs
-
+share/www/main.js
+share/www/main-coffee.js
 deps
 ebin
