@@ -258,22 +258,25 @@ default_env() ->
      {"STATICLIBS", libsdir()},
 
      {"JS_CFLAGS", lists:concat(["-fPIC -Wall",
-                                 " -I" ++ libsdir() ++ "/js/include",
-                                 " -DXP_UNIX"])},
+                                " -I" ++ libsdir() ++ "/js/include",
+                                " -DXP_UNIX"])},
 
      {"JS_LIBS", lists:concat([libsdir() ++ "/js/lib/libjs_static.a ",
-                               libsdir() ++ "/nsprpub/lib/libnspr4.a",
-                               " -lstdc++",
-                               " "])},
+                                libsdir() ++ "/nsprpub/lib/libnspr4.a",
+                                " -lstdc++",
+                                " "])},
 
      {"ICU_CFLAGS", lists:concat(["$DRV_CFLAGS"
-                                  " -I" ++ libsdir() ++ "/icu/include"])},
+                                " -I" ++ libsdir() ++ "/icu/include"])},
 
      {"ICU_LIBS", lists:concat(["$DRV_LDFLAGS"
                                 " " ++ libsdir() ++ "/icu/lib/libicui18n.a",
-                                " " ++ libsdir() ++ "/icu/lib/libicui18n.a",
-                                " " ++ libsdir() ++ "/icu/lib/libicui18n.a",
+                                " " ++ libsdir() ++ "/icu/lib/libicuuc.a",
+                                " " ++ libsdir() ++ "/icu/lib/libicudata.a",
                                 " "])},
 
-     {"linux", "JS_LIBS", "$JS_LIBS -lpthread"}
+     {"linux", "JS_LIBS", lists:concat([libsdir() ++ "/js/lib/libjs_static.a ",
+                               libsdir() ++ "/nsprpub/lib/libnspr4.a",
+                               " -lstdc++ -lpthread",
+                               " "])}
     ].
