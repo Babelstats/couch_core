@@ -6,24 +6,46 @@
 
 
 main([]) ->
-    IsUnix = element(1, os:type()) =:= unix,
 
-    if IsUnix ->
+    case os:type() of
+        {unix, darwin} ->
+            build_darwin();
+        {unix, _} ->
             build_unix();
-        true ->
+        _ ->
             build_win()
     end;
-main(["clean"|_]) ->
-    IsUnix = element(1, os:type()) =:= unix,
 
-    if IsUnix ->
+main(["clean"|_]) ->
+    case os:type() of
+        {unix, darwin} ->
+            clean_darwin();
+        {unix, _} ->
             clean_unix();
-        true ->
+        _ ->
             clean_win()
     end;
 main(_) ->
     io:format("Operation not supported", []),
     erlang:halt(1).
+
+
+build_darwin() ->
+    Env = setup_env(),
+
+    %% build static libs@
+    sh(rootdir() ++ "/contrib/build_libs.sh", Env),
+    
+    %% make couchjs, icu driver and nifs
+    MakeArgs = case is_arch("R14") of
+        true -> " all nifs";
+        false -> ""
+    end,
+    io:format("==> couchjs, icu driver and nifs (compile)~n", []),
+    sh("make -f c_src/Makefile.osx" ++ MakeArgs, Env),
+    erlang:halt(0).
+
+
 
 build_unix() ->
     Env = setup_env(),
@@ -39,6 +61,18 @@ build_unix() ->
     io:format("==> couchjs, icu driver and nifs (compile)~n", []),
     sh("make -f c_src/Makefile.unix" ++ MakeArgs, Env),
     erlang:halt(0).
+
+clean_darwin() ->
+    Env = setup_env(),
+
+    %% clean couchjs, icu driver and nifs
+    io:format("==> couchjs, icu driver and nifs (clean)~n", []),
+    io:format("[INFO] To clean static libs run the command" ++
+        " './contrib/build_libs.sh clean' .~n", []),
+
+    sh("make -f c_src/Makefile.osx clean", Env),
+    erlang:halt(0).
+
 
 clean_unix() ->
     Env = setup_env(),
@@ -257,7 +291,7 @@ default_env() ->
     [
      {"STATICLIBS", libsdir()},
 
-     {"JS_CFLAGS", lists:concat(["-fPIC -Wall",
+     {"JS_CFLAGS", lists:concat(["-fPIC -Wall -Os",
                                 " -I" ++ libsdir() ++ "/js/include",
                                 " -DXP_UNIX"])},
 

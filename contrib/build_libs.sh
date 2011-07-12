@@ -230,9 +230,11 @@ do_builddeps()
         build_js
     fi
 
-    if [ ! -f $STATICLIBS/icu/lib/libicui18n.a ]; then
-        clean_icu
-        build_icu
+    if [ "x$1" == "xstatic" ]; then
+        if [ ! -f $STATICLIBS/icu/lib/libicui18n.a ]; then
+            clean_icu
+            build_icu
+        fi
     fi
 }
 
@@ -277,6 +279,10 @@ case "$1" in
         do_setup
         do_builddeps
         ;;
+    static);
+        shift 1
+        do_setup
+        do_build_deps "static"
     clean)
         shift 1 
         clean 
