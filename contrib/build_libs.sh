@@ -37,12 +37,9 @@ JS_LIBDIR=$STATICLIBS/js/lib
 JS_INCDIR=$STATICLIBS/js/include
 
 # icu sources
-ICU_VER=4.8
-ICU_DISTNAME=icu4c-4_8-src.tgz
+ICU_VER=4.4.2
+ICU_DISTNAME=icu4c-4_4_2-src.tgz
 ICU_SITE=http://download.icu-project.org/files/icu4c/$ICU_VER
-ICUDATA_DISTNAME=icudt48l.zip
-ICUDATA_SITE=http://rcouch.refuge.io/dl/libs
-ICUDATA_FILE=icudt48l.dat
 ICUDIR=$STATICLIBS/icu_src/icu
 
 
@@ -183,7 +180,6 @@ clean_icu()
 build_icu()
 {
     fetch $ICU_DISTNAME $ICU_SITE
-    fetch $ICUDATA_DISTNAME $ICUDATA_SITE
     
     mkdir -p $ICUDIR
 
@@ -191,9 +187,6 @@ build_icu()
     
     cd $STATICLIBS
     $GUNZIP -c $DISTDIR/$ICU_DISTNAME | $TAR xf - -C $STATICLIBS/icu_src
-    $UNZIP $DISTDIR/$ICUDATA_DISTNAME
-
-    mv $ICUDATA_FILE $ICUDIR/source/data/in/
 
     # apply patches
     cd $STATICLIBS/icu_src
@@ -203,22 +196,19 @@ build_icu()
 
     cd $ICUDIR/source
 
-    CFLAGS="-g -O2 -fPIC"
-    CXXFLAGS="-fPIC"
-    LDFLAGS=""
-    CPPFLAGS="-DUCONFIG_ONLY_COLLATION=1 -DUCONFIGU_NO_FORMATTING=1"
+    CFLAGS="-g -Wall -fPIC -Os"
 
-    env CC="$CC" CXX="$CXX" CXXFLAGS="$CXXFLAGS" \
-        LDFLAGS="$LDFLAGS" CPPFLAGS="$CPPFLAGS" \
+    env CC="gcc" CXX="g++" CPPFLAGS="" LDFLAGS="-fPIC" \
+	CFLAGS="$CFLAGS" CXXFLAGS="$CFLAGS" \
         ./configure --disable-debug \
-				    --enable-static \
-				    --disable-shared \
-				    --disable-icuio \
-				    --disable-layout \
-				    --disable-extras \
-				    --disable-tests \
-				    --disable-samples \
-				    --prefix=$STATICLIBS/icu && \
+		    --enable-static \
+		    --disable-shared \
+		    --disable-icuio \
+		    --disable-layout \
+		    --disable-extras \
+		    --disable-tests \
+		    --disable-samples \
+		    --prefix=$STATICLIBS/icu && \
         $GNUMAKE && $GNUMAKE install
 }
 

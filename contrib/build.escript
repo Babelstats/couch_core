@@ -273,7 +273,7 @@ default_env() ->
                                 " " ++ libsdir() ++ "/icu/lib/libicui18n.a",
                                 " " ++ libsdir() ++ "/icu/lib/libicuuc.a",
                                 " " ++ libsdir() ++ "/icu/lib/libicudata.a",
-                                " "])},
+                                " -lstdc++"])},
 
      {"linux", "JS_LIBS", lists:concat([libsdir() ++ "/js/lib/libjs_static.a ",
                                libsdir() ++ "/nsprpub/lib/libnspr4.a",

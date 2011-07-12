@@ -66,13 +66,11 @@ $(COFFEE_FILE): $(JS_FILE_COMPONENTS) $(COFFEE_FILE_COMPONENTS_LAST)
 icu: priv/couch_icu_driver.so
 
 priv/couch_icu_driver.so: c_src/icu_driver/couch_icu_driver.c
-	@$(CC) $(ICU_CFLAGS) $(ICU_LIBS) $^ -o $@
+	@$(CC) $(ICU_CFLAGS) -D_BSD_SOURCE $^ $(ICU_LIBS) -o $@
 
 nifs: couch_ejson_compare
 
 couch_ejson_compare: priv/couch_ejson_compare.so
 
 priv/couch_ejson_compare.so: $(COUCH_EJSON_COMPARE_FILES)
-	@$(CC) $(ICU_CFLAGS) $(ICU_LIBS) \
-		c_src/couch_ejson_compare/couch_ejson_compare.c \
-		-o priv/couch_ejson_compare.so
+	@$(CC) $(ICU_CFLAGS)  c_src/couch_ejson_compare/couch_ejson_compare.c $(ICU_LIBS) -o priv/couch_ejson_compare.so
