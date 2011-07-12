@@ -214,7 +214,7 @@ build_icu()
 
 do_setup()
 {
-    echo "==> start building couch_core static libs"
+    echo "==> couch_core static libs (compile)"
     mkdir -p $DISTDIR
 }
 
@@ -230,9 +230,11 @@ do_builddeps()
         build_js
     fi
 
-    if [ ! -f $STATICLIBS/icu/lib/libicui18n.a ]; then
-        clean_icu
-        build_icu
+    if [ "x$USE_STATIC_ICU" = "x1" ]; then
+        if [ ! -f $STATICLIBS/icu/lib/libicui18n.a ]; then
+            clean_icu
+            build_icu
+        fi
     fi
 }
 
@@ -264,12 +266,13 @@ Report bugs at <https://github.com/refuge/couch_core>.
 EOF
 }
 
-if [ X"$1" = X"" ]; then 
+
+
+if [ "x$1" = "x" ]; then 
     do_setup
     do_builddeps
 	exit 0 
 fi
-
 
 case "$1" in
     all)
