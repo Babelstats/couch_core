@@ -6,7 +6,6 @@
 
 
 main([]) ->
-
     case os:type() of
         {unix, darwin} ->
             build_darwin();
@@ -290,6 +289,7 @@ filter_envs([{Key, Value} | Rest], Acc) ->
 default_env() ->
     [
      {"STATICLIBS", libsdir()},
+     {"ROOTDIR", rootdir()},
 
      {"JS_CFLAGS", lists:concat(["-fPIC -Wall -Os",
                                 " -I" ++ libsdir() ++ "/js/include",

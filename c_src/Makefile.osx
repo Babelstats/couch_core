@@ -29,6 +29,13 @@ COFFEE_FILE_COMPONENTS_LAST = share/server/coffee-script.js \
 ICU_CFLAGS=$(DRV_CFLAGS) -Icontrib/osx/icu -I/usr/include -fPIC
 ICU_LIBS= -lpthread -lm -licucore -lstdc++ -L/usr/lib $(DRV_LDFLAGS) -fPIC
 
+ifeq ($(USE_STATIC_ICU), 1)
+	ICU_CFLAGS=$(DRV_CFLAGS) -I$(STATICLIBS)/icu
+	ICU_LIBS=-lstdc++ -fPIC $(DRV_LDFLAGS) \
+			 $(STATICLIBS)/icu/lib/libicui18n.a \
+			 $(STATICLIBS)/icu/lib/libicuuc.a \
+			 $(STATICLIBS)/icu/lib/libicudata.a
+endif
 
 COUCH_EJSON_COMPARE_FILES= \
 		c_src/couch_ejson_compare/erl_nif_compat.h \

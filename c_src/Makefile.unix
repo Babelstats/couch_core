@@ -1,6 +1,8 @@
 
 STATICLIBS?=libs
 
+USE_STATIC_ICU:=0
+
 CC=cc
 GCC=gcc
 CXX=g++
@@ -25,12 +27,22 @@ COFFEE_FILE= share/server/main-coffee.js
 COFFEE_FILE_COMPONENTS_LAST = share/server/coffee-script.js \
 							  share/server/loop.js
 
-
-
 COUCH_EJSON_COMPARE_FILES= \
 		c_src/couch_ejson_compare/erl_nif_compat.h \
 		c_src/couch_ejson_compare/couch_ejson_compare.c
 
+
+ICU_CFLAGS=$(shell -c "icu-config --cflags 2>/dev/null") $(DRV_LDFLAGS) 
+ICU_LIBS=$(shell -c "icu-config --ldflags 2>/dev/null") $(DRV_LDFLAGS) 
+
+ifdef USE_STATIC_ICU
+	ICU_CFLAGS=$(DRV_CFLAGS) -I$(STATICLIBS)
+	ICU_LIBS=-lstdc++ -fPIC $(DRV_LDFLAGS) \
+			 $(STATICLIBS)/icu/lib/libicui18n.a \
+			 $(STATICLIBS)/icu/lib/libicuuc.a \
+			 $(STATICLIBS)/icu/lib/libicudata.a
+endif
+			 
 all: compile 
 	@install couchspawnkillable/couchspawnkillable.sh priv/couchspawnkillable
 
