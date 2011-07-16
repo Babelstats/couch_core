@@ -59,8 +59,9 @@ start_link() ->
 set_timeout(Pid, TimeOut) ->
     gen_server:call(Pid, {set_timeout, TimeOut}).
 
+%%Setting the timeout to 1 minute
 prompt(Pid, Data) when is_list(Data) ->
-    gen_server:call(Pid, {prompt, Data}).
+    gen_server:call(Pid, {prompt, Data},60000).
 
 % gen_server callbacks
 init([]) ->
